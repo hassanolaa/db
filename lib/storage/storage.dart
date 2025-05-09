@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 import 'package:crypto/crypto.dart';
@@ -15,6 +16,26 @@ Map<String, List<Map<String, dynamic>>> loadSchemas() {
               (value as List).map((e) => e as Map<String, dynamic>).toList()));
 }
 
+Map<String, List<Map<String, dynamic>>> loadData() {
+  return (jsonDecode(File("data").readAsStringSync()) as Map<String, dynamic>)
+    .map((key, value) => MapEntry(
+        key,
+        (value as List).map((e) => e as Map<String, dynamic>).toList()));
+}
+
+void saveData(Map<String, List<Map<String, dynamic>>> data) {
+    File("data").writeAsString(jsonEncode(data));
+}
+
+enum Type {
+  string,
+  number,
+  boolean,
+  map,
+  array,
+  date,
+}
+
 class Storage {
   Storage(this.workingDirectory);
   String workingDirectory = "";
@@ -22,30 +43,37 @@ class Storage {
   String get stringsStore => workingDirectory + "/" + "strings";
   String get jsonStore => workingDirectory + "/" + "jsons";
   // String get mapsStore => workingDirectory + "/" + "maps";
-
-  final Map<int,String> _stringStore = {};
   
   int storeString(String str) {
     sha1.convert(utf8.encode(str)).toString();
-    int hash = hashString(str) ;
-    _stringStore.putIfAbsent(hash , () => str );
+    int hash = _hashString(str) ;
+    // _stringStore.putIfAbsent(hash , () => str );
+    File(stringsStore + "/" + hash.toString()).writeAsString(str);
     return hash;
   }
   
   String getString(int hash) {
-    var str = _stringStore[hash];
-    if (str == null) {
-      return "";
-    }
-    return str;
+    return File(stringsStore + "/" + hash.toString()).readAsStringSync(); 
   }
   
-  int hashString(String str) {
+  int _hashString(String str) {
     int sum = 0;
     for (int i in str.codeUnits) {
       sum += i;
     }
     return sum;
+  }
+}
+
+Future<String> readOrCreateDefault(String filePath, String defaultValue) async {
+  final file = File(filePath);
+
+  if (await file.exists()) {
+    return await file.readAsString();
+  } else {
+    await file.create(recursive: true);
+    await file.writeAsString(defaultValue);
+    return defaultValue;
   }
 }
 
