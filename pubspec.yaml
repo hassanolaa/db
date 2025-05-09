@@ -37,6 +37,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   intl:
   crypto:
+  dart_frog:
+  shelf_router:
+  http:
 
 dev_dependencies:
   flutter_test:
