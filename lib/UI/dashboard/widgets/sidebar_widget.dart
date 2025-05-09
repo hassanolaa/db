@@ -1,4 +1,4 @@
-import 'package:db/core/shared/shareddata.dart';
+import 'package:db/UI/core/shared/shareddata.dart';
 import 'package:flutter/material.dart';
 
 class SidebarWidget extends StatefulWidget {
@@ -35,6 +35,8 @@ class _SidebarWidgetState extends State<SidebarWidget> {
               isSelected: view==0,onTap:widget.onTap),
       //    _buildSidebarItem('Hosting', Icons.public, isSelected: false),
           _buildSidebarItem('Key-Value Database', Icons.location_searching, isSelected: view==1,onTap: widget.onTap,),
+          _buildSidebarItem('Authentication', Icons.lock_outline_rounded, isSelected: view==2,onTap: widget.onTap,),
+
           // const Padding(
           //   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           //   child: Text(

@@ -1,4 +1,4 @@
-import 'package:db/dashboard/screens/dashboard.dart';
+import 'package:db/UI/dashboard/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 
 class CollectionsPanel extends StatefulWidget {
